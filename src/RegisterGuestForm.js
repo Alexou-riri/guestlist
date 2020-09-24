@@ -28,7 +28,7 @@ function RegisterGuestForm(props) {
     <div css={RegisterGuestFormStyles}>
       <form
         onSubmit={(e) => {
-          props.addGuest(newGuestFirstName, newGuestLastName, setNewGuestEmail);
+          props.addGuest(newGuestFirstName, newGuestLastName, newGuestEmail);
           e.preventDefault();
         }}
       >

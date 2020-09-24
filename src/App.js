@@ -22,19 +22,12 @@ const MainStyles = css`
 `;
 
 function App() {
-  const [guestList, setGuestList] = useState([
-    {
-      firstName: 'Rosalind',
-      lastName: 'Franklin',
-      isAttending: true,
-      id: 2,
-    },
-  ]);
+  const [guestList, setGuestList] = useState([]);
   // set filter to show attending and not attending guests
-  // const showAll = 'showAll';
-  // const showAttending = 'showAttending';
-  // const showNotAttending = 'showNotAttending';
-  // const [filter, setFilter] = useState(showAll);
+  const showAll = 'showAll';
+  const showAttending = 'showAttending';
+  const showNotAttending = 'showNotAttending';
+  const [filter, setFilter] = useState(showAll);
 
   // class contructor for new guest
 
@@ -61,13 +54,13 @@ function App() {
   };
   const toggleAttendance = (id) => {
     const updatedGuestList = guestList.map((guest) =>
-      guest.id !== id ? guest : { ...guest, IsAttending: !guest.IsAttending },
+      guest.id !== id ? guest : { ...guest, isAttending: !guest.isAttending },
     );
     setGuestList(updatedGuestList);
   };
   const confirmAttendance = (id) => {
     const updatedGuestList = guestList.map((guest) =>
-      guest.id !== id ? guest : { ...guest, IsAttending: true },
+      guest.id !== id ? guest : { ...guest, isAttending: true },
     );
     setGuestList(updatedGuestList);
   };
@@ -79,13 +72,6 @@ function App() {
     setGuestList(updatedGuestListGuestDeleted);
   };
 
-  // <button onClick={() => setFilter(showAll)}>Show all</button>
-  //     <button onClick={() => setFilter(showAttending)}>Show attending</button>
-  //     <button onClick={() => setFilter(showNotAttending)}>
-  //       Show cancelled
-  //     </button>
-  // filter={filter}
-
   return (
     <main css={MainStyles}>
       <h1>RSVP Guest List</h1>
@@ -93,12 +79,18 @@ function App() {
         addGuest={addGuest}
         deleteAllGuests={deleteAllGuests}
       />
-
+      <button onClick={() => setFilter(showAll)}>Show all</button>
+      <button onClick={() => setFilter(showAttending)}>Show attending</button>
+      <button onClick={() => setFilter(showNotAttending)}>
+        Show cancelled
+      </button>
+      <div>Filter is set to {filter} </div>
       <GuestList
         guestList={guestList}
         toggleAttendance={toggleAttendance}
         confirmAttendance={confirmAttendance}
         deleteGuest={deleteGuest}
+        filter={filter}
       />
     </main>
   );

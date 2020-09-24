@@ -31,24 +31,24 @@ function GuestList({
   toggleAttendance,
   confirmAttendance,
   deleteGuest,
-  // filter,
+  filter,
 }) {
-  // const [guestListFiltered, SetGuestListFiltered] = useState(guestList);
+  let filteredGuestList = guestList;
 
-  // if (filter === 'showAttending') {
-  //   SetGuestListFiltered(
-  //     guestList.filter((guest) => guest.isAttending === true),
-  //   );
-  // } else if (filter === 'showNotAttending') {
-  //   SetGuestListFiltered(
-  //     guestList.filter((guest) => guest.isAttending === false),
-  //   );
-  // }
-
+  if (filter === 'showAttending') {
+    filteredGuestList = guestList.filter((guest) => guest.isAttending === true);
+    console.log(filteredGuestList);
+  } else if (filter === 'showNotAttending') {
+    filteredGuestList = guestList.filter(
+      (guest) => guest.isAttending === false,
+    );
+    console.log(filteredGuestList);
+  }
+  console.log(filteredGuestList);
   return (
     <div css={GuestListStyles}>
       <ul>
-        {guestList.map((guest) => (
+        {filteredGuestList.map((guest) => (
           <li key={guest.id}>
             <button
               onClick={() => {
@@ -62,7 +62,7 @@ function GuestList({
                 toggleAttendance(guest.id);
               }}
             >
-              {guest.IsAttending ? 'Cancel' : 'Confirm'}
+              {guest.isAttending ? 'Cancel' : 'Confirm'}
             </button>
             <button
               onClick={() => {
@@ -73,7 +73,7 @@ function GuestList({
             </button>
             <Emoji symbol="★  " />
             {guest.firstName} {guest.lastName}{' '}
-            {guest.IsAttending ? 'attends the party' : null}
+            {guest.isAttending ? 'attends the party' : 'has cancelled'}
           </li>
         ))}
       </ul>
