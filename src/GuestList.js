@@ -31,18 +31,13 @@ function GuestList({ guestList, toggleAttendance, deleteGuest, filter }) {
 
   if (filter === 'showAttending') {
     filteredGuestList = guestList.filter((guest) => guest.attending === true);
-    console.log(filteredGuestList);
   } else if (filter === 'showNotAttending') {
     filteredGuestList = guestList.filter((guest) => guest.attending === false);
-    console.log(filteredGuestList);
   }
-  console.log(filteredGuestList);
 
   const [isEditable, setIsEditable] = useState(false);
   const changeIsEditable = () => {
-    console.log(isEditable);
     setIsEditable(!isEditable);
-    console.log(isEditable);
   };
 
   const updateFirstName = () => {

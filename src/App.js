@@ -6,7 +6,6 @@ import { jsx, css } from '@emotion/core';
 import './App.css';
 import GuestList from './GuestList';
 import RegisterGuestForm from './RegisterGuestForm';
-//import InlineEdit from './InlineEdit';
 
 const MainStyles = css`
   width: 80%;
@@ -24,37 +23,19 @@ const MainStyles = css`
 
 function App() {
   const baseUrl = 'http://localhost:5000';
+  // setState initially to empty array, until use Effect fetches data from the server
   const [guestList, setGuestList] = useState([]);
-  // set filter to show attending and not attending guests
+  // define filters to show attending and not attending guests, initially set to show all
   const showAll = 'showAll';
   const showAttending = 'showAttending';
   const showNotAttending = 'showNotAttending';
   const [filter, setFilter] = useState(showAll);
 
-  // class contructor for new guest
-  class Guest {
-    constructor(firstName, lastName, confirmationDueDate, attending, id) {
-      this.firstName = firstName;
-      this.lastName = lastName;
-      this.confirmationDueDate = confirmationDueDate;
-      this.attending = attending;
-      this.id = id;
-    }
-  }
-  // add a new guest by creating a new guest object with the class guest, push it to the guestlist and update guest list state
-  const addGuest = (first, last, confirmationDueDate) => {
-    const newGuest = new Guest(
-      first,
-      last,
-      confirmationDueDate,
-      false,
-      Math.random(),
-    );
-    const guestListWithAddedGuest = guestList.slice();
-    guestListWithAddedGuest.push(newGuest);
-    setGuestList(guestListWithAddedGuest);
-    console.log(guestList);
-    postGuest(first, last);
+  // function to fetch GuestList form the server
+  const fetchGuestList = async () => {
+    const response = await fetch('http://localhost:5000/');
+    const data = await response.json();
+    setGuestList(data);
   };
 
   // function to post new Guest to the server
@@ -69,27 +50,71 @@ function App() {
     });
   };
 
-  const fetchGuestList = async () => {
-    const response = await fetch('http://localhost:5000/');
-    const data = await response.json();
-    console.log(data);
-    setGuestList(data);
+  // function to delete one guest from the server
+  const deleteGuestFromServer = (id) => {
+    fetch(`${baseUrl}/${id}`, { method: 'DELETE' });
   };
-  // function to fetch GuestList form the server
+
+  // function to patch attendance for one guest
+  const patchAttendance = (id, newAttendance) => {
+    fetch(`${baseUrl}/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ attending: newAttendance.toString() }),
+    });
+  };
+
+  // call this function in use effect on rendering to fetch guest list from server
   useEffect(() => {
     fetchGuestList();
   }, []);
-  // function to patch attendance for one guest
-  // function to delete one guest
 
-  const deleteAllGuests = () => {
+  // class contructor for new guest
+  class Guest {
+    constructor(firstName, lastName, confirmationDueDate, attending) {
+      this.firstName = firstName;
+      this.lastName = lastName;
+      this.confirmationDueDate = confirmationDueDate;
+      this.attending = attending;
+    }
+  }
+  // add a new guest by creating a new guest object with the class guest, push it to the guestlist and update guest list state
+  const addGuest = (first, last, confirmationDueDate) => {
+    const newGuest = new Guest(first, last, confirmationDueDate, false);
+    const guestListWithAddedGuest = guestList.slice();
+    guestListWithAddedGuest.push(newGuest);
+    setGuestList(guestListWithAddedGuest);
+    postGuest(first, last);
+  };
+
+  const deleteAllGuests = (guestList) => {
+    for (let i = 0; i < guestList.length; i++) {
+      deleteGuestFromServer(guestList[i].id);
+      console.log(guestList[i].id);
+    }
     setGuestList([]);
   };
+
+  // change attending status of one guest. filter guest list by id and get attenting status of that guest.
+  // patch inverse of that boolean to the server
   const toggleAttendance = (id) => {
+    const guestById = guestList.filter((guest) => guest.id === id);
+    const newAttendance = !guestById[0].attending;
+    patchAttendance(id, newAttendance);
     const updatedGuestList = guestList.map((guest) =>
       guest.id !== id ? guest : { ...guest, attending: !guest.attending },
     );
     setGuestList(updatedGuestList);
+  };
+
+  const toggleAttendance2 = (id) => {
+    //first filter out guest I want to modify
+    const guestToModify = guestList.filter((guest) => guest.id === id);
+    console.log(guestToModify);
+    const modifiedGuest = { ...guestToModify[0], attending: false };
+    console.log(modifiedGuest);
   };
 
   const deleteGuest = (id) => {
@@ -97,6 +122,7 @@ function App() {
       (guest) => guest.id !== id,
     );
     setGuestList(updatedGuestListGuestDeleted);
+    deleteGuestFromServer(id);
   };
 
   const updateFirstName = (id) => {
@@ -110,7 +136,9 @@ function App() {
     <main css={MainStyles}>
       <h1>RSVP Guest List</h1>
       <RegisterGuestForm addGuest={addGuest} />
-      <button onClick={() => deleteAllGuests}>Delete Guest List</button>
+      <button onClick={() => deleteAllGuests(guestList)}>
+        Delete Guest List
+      </button>
       <div>Filter is set to:</div>
       <button onClick={() => setFilter(showAttending)}>attending</button>
       <button onClick={() => setFilter(showNotAttending)}>not attending</button>
