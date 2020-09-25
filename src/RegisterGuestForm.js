@@ -3,6 +3,8 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
 import { jsx, css } from '@emotion/core';
+import Datepicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const RegisterGuestFormStyles = css`
   input {
@@ -22,14 +24,20 @@ const RegisterGuestFormStyles = css`
 function RegisterGuestForm(props) {
   const [newGuestFirstName, setNewGuestFirstName] = useState('');
   const [newGuestLastName, setNewGuestLastName] = useState('');
-  const [newGuestEmail, setNewGuestEmail] = useState('');
+  const [newGuestDueDate, setNewGuestDueDate] = useState(new Date());
+
+  const handleChangedDate = (date) => {
+    setNewGuestDueDate(date);
+  };
 
   return (
     <div css={RegisterGuestFormStyles}>
       <form
         onSubmit={(e) => {
-          props.addGuest(newGuestFirstName, newGuestLastName, newGuestEmail);
+          props.addGuest(newGuestFirstName, newGuestLastName, newGuestDueDate);
           e.preventDefault();
+          setNewGuestFirstName([]);
+          setNewGuestLastName([]);
         }}
       >
         <input
@@ -46,15 +54,9 @@ function RegisterGuestForm(props) {
           value={newGuestLastName}
           onChange={(e) => setNewGuestLastName(e.currentTarget.value)}
         ></input>
-        <input
-          type="email"
-          placeholder="example@email.com"
-          value={newGuestEmail}
-          onChange={(e) => setNewGuestEmail(e.currentTarget.value)}
-        ></input>
+        <Datepicker selected={newGuestDueDate} onChange={handleChangedDate} />
         <input type="submit" value="Invite Guest" />
       </form>
-      <button onClick={() => props.deleteAllGuests()}>Clear All</button>
     </div>
   );
 }

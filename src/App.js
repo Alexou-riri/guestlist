@@ -6,6 +6,7 @@ import { jsx, css } from '@emotion/core';
 import './App.css';
 import GuestList from './GuestList';
 import RegisterGuestForm from './RegisterGuestForm';
+//import InlineEdit from './InlineEdit';
 
 const MainStyles = css`
   width: 80%;
@@ -22,6 +23,7 @@ const MainStyles = css`
 `;
 
 function App() {
+  const baseUrl = 'http://localhost:5000';
   const [guestList, setGuestList] = useState([]);
   // set filter to show attending and not attending guests
   const showAll = 'showAll';
@@ -30,37 +32,59 @@ function App() {
   const [filter, setFilter] = useState(showAll);
 
   // class contructor for new guest
-
   class Guest {
-    constructor(firstName, lastName, email, isAttending, id) {
+    constructor(firstName, lastName, confirmationDueDate, attending, id) {
       this.firstName = firstName;
       this.lastName = lastName;
-      this.email = email;
-      this.isAttending = isAttending;
+      this.confirmationDueDate = confirmationDueDate;
+      this.attending = attending;
       this.id = id;
     }
   }
-  // ad a new guest by creating a new guest object with the class guest, push it to the guestlist and update guest list state
-  const addGuest = (first, last, email) => {
-    const newGuest = new Guest(first, last, (email = ''), false, Math.random());
+  // add a new guest by creating a new guest object with the class guest, push it to the guestlist and update guest list state
+  const addGuest = (first, last, confirmationDueDate) => {
+    const newGuest = new Guest(
+      first,
+      last,
+      confirmationDueDate,
+      false,
+      Math.random(),
+    );
     const guestListWithAddedGuest = guestList.slice();
     guestListWithAddedGuest.push(newGuest);
     setGuestList(guestListWithAddedGuest);
     console.log(guestList);
+    postGuest(first, last);
   };
+
+  // function to post new Guest to the server
+  const postGuest = (first, last) => {
+    fetch(`${baseUrl}/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        firstName: first,
+        lastName: last,
+      }),
+    });
+  };
+
+  // function to fetch GuestList form the server
+  const fetchGuestList = async () => {
+    const response = await fetch('http://localhost:5000');
+    const data = await response.json();
+    console.log(data);
+    setGuestList(data);
+  };
+  // function to patch attendance for one guest
+  // function to delete one guest
 
   const deleteAllGuests = () => {
     setGuestList([]);
   };
   const toggleAttendance = (id) => {
     const updatedGuestList = guestList.map((guest) =>
-      guest.id !== id ? guest : { ...guest, isAttending: !guest.isAttending },
-    );
-    setGuestList(updatedGuestList);
-  };
-  const confirmAttendance = (id) => {
-    const updatedGuestList = guestList.map((guest) =>
-      guest.id !== id ? guest : { ...guest, isAttending: true },
+      guest.id !== id ? guest : { ...guest, attending: !guest.attending },
     );
     setGuestList(updatedGuestList);
   };
@@ -72,24 +96,28 @@ function App() {
     setGuestList(updatedGuestListGuestDeleted);
   };
 
+  const updateFirstName = (id) => {
+    const updatedGuestList = guestList.map((guest) =>
+      guest.id !== id ? guest : { ...guest, firstName: 'something' },
+    );
+    setGuestList(updatedGuestList);
+  };
+
   return (
     <main css={MainStyles}>
       <h1>RSVP Guest List</h1>
-      <RegisterGuestForm
-        addGuest={addGuest}
-        deleteAllGuests={deleteAllGuests}
-      />
-      <button onClick={() => setFilter(showAll)}>Show all</button>
-      <button onClick={() => setFilter(showAttending)}>Show attending</button>
-      <button onClick={() => setFilter(showNotAttending)}>
-        Show cancelled
-      </button>
-      <div>Filter is set to {filter} </div>
+      <RegisterGuestForm addGuest={addGuest} />
+      <button onClick={() => deleteAllGuests}>Delete Guest List</button>
+      <div>Filter is set to:</div>
+      <button onClick={() => setFilter(showAttending)}>attending</button>
+      <button onClick={() => setFilter(showNotAttending)}>not attending</button>
+      <button onClick={() => setFilter(showAll)}>Reset Filter</button>
+
       <GuestList
         guestList={guestList}
         toggleAttendance={toggleAttendance}
-        confirmAttendance={confirmAttendance}
         deleteGuest={deleteGuest}
+        updateFirstName={updateFirstName}
         filter={filter}
       />
     </main>
