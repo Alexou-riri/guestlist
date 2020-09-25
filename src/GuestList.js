@@ -87,8 +87,8 @@ function GuestList({ guestList, toggleAttendance, deleteGuest, filter }) {
             </div>
             <div>
               {' '}
-              Confirmation due by:{' '}
-              {guest.confirmationDueDate.toLocaleDateString()}
+              {/* Confirmation due by:{' '}
+              {guest.confirmationDueDate.toLocaleDateString()} */}
             </div>
           </li>
         ))}

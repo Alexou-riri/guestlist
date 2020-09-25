@@ -1,7 +1,7 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 // eslint-disable-next-line no-unused-vars
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { jsx, css } from '@emotion/core';
 import './App.css';
 import GuestList from './GuestList';
@@ -69,13 +69,16 @@ function App() {
     });
   };
 
-  // function to fetch GuestList form the server
   const fetchGuestList = async () => {
-    const response = await fetch('http://localhost:5000');
+    const response = await fetch('http://localhost:5000/');
     const data = await response.json();
     console.log(data);
     setGuestList(data);
   };
+  // function to fetch GuestList form the server
+  useEffect(() => {
+    fetchGuestList();
+  }, []);
   // function to patch attendance for one guest
   // function to delete one guest
 
