@@ -7,22 +7,28 @@ import Emoji from './Emoji';
 
 const GuestListStyles = css`
   ul {
+    margin: 0 0;
     list-style: none;
     align-items: space-between;
+    padding: 0;
   }
 
   button {
     font-size: 0.8em;
     width: 80px;
     display: inline-block;
-    margin: 0;
+    margin: 0 0.5em 0 0em;
     justify-content: right;
     align-self: right;
   }
   li {
     width: 100%;
     font-size: 18px;
-    margin: 0;
+    margin: 1em 0;
+
+    button {
+      margin: 0, 0.5em;
+    }
   }
 `;
 
@@ -66,7 +72,7 @@ function GuestList({ guestList, toggleAttendance, deleteGuest, filter }) {
                 {guest.attending ? 'Cancel' : 'Confirm'}
               </button>
 
-              <Emoji symbol="★  " />
+              <Emoji symbol="🎩 " />
               {isEditable ? (
                 <span>
                   <input type="text" defaultValue={guest.firstName} />

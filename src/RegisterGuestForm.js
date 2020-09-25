@@ -17,7 +17,7 @@ const RegisterGuestFormStyles = css`
   button {
     font-size: 18px;
     height: 2em;
-    margin-right: 1em;
+    margin: 0 2em;
   }
 `;
 

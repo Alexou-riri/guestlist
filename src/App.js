@@ -13,7 +13,7 @@ const MainStyles = css`
   height: 1000px;
   background-color: white;
   padding: 2em;
-  margin: 2em auto;
+  margin: 0 auto;
   background-color: rgba(255, 255, 255, 0.95);
 
   h1 {
@@ -96,25 +96,43 @@ function App() {
     }
     setGuestList([]);
   };
-
+  // two different methods to change one guest and update the guest list
   // change attending status of one guest. filter guest list by id and get attenting status of that guest.
   // patch inverse of that boolean to the server
-  const toggleAttendance = (id) => {
-    const guestById = guestList.filter((guest) => guest.id === id);
-    const newAttendance = !guestById[0].attending;
-    patchAttendance(id, newAttendance);
-    const updatedGuestList = guestList.map((guest) =>
-      guest.id !== id ? guest : { ...guest, attending: !guest.attending },
-    );
-    setGuestList(updatedGuestList);
-  };
+  // first not quite working
+  // const toggleAttendance2 = (id) => {
+  //   const guestById = guestList.filter((guest) => guest.id === id);
+  //   const newAttendance = !guestById[0].attending;
+  //   patchAttendance(id, newAttendance);
+  //   const updatedGuestList = guestList.map((guest) =>
+  //     guest.id !== id ? guest : { ...guest, attending: !guest.attending },
+  //   );
+  //   setGuestList(updatedGuestList);
+  // };
 
-  const toggleAttendance2 = (id) => {
-    //first filter out guest I want to modify
-    const guestToModify = guestList.filter((guest) => guest.id === id);
-    console.log(guestToModify);
-    const modifiedGuest = { ...guestToModify[0], attending: false };
-    console.log(modifiedGuest);
+  const toggleAttendance = (id) => {
+    //first filter out guest I want to modify, inialize index varible outside of filter
+    // if the filter condition is true, get the index of that element, return the filtered element
+    let index;
+    const guestToModify = guestList.filter((guest, ind) => {
+      if (guest.id === id) {
+        index = ind;
+      }
+      return guest.id === id;
+    });
+    // change the value of the attending property in the  element the filter returned
+    const modifiedGuest = {
+      ...guestToModify[0],
+      attending: !guestToModify[0].attending,
+    };
+    // make a copy of the guest list with slice
+    const guestListWithModifiedGuest = guestList.slice();
+    //replace the element in the list with the modified element
+    guestListWithModifiedGuest[index] = modifiedGuest;
+    // set the guest List state to that new array
+    setGuestList(guestListWithModifiedGuest);
+    // patch with the id and modified attending status
+    patchAttendance(id, modifiedGuest.attending);
   };
 
   const deleteGuest = (id) => {
@@ -136,9 +154,7 @@ function App() {
     <main css={MainStyles}>
       <h1>RSVP Guest List</h1>
       <RegisterGuestForm addGuest={addGuest} />
-      <button onClick={() => deleteAllGuests(guestList)}>
-        Delete Guest List
-      </button>
+
       <div>Filter is set to:</div>
       <button onClick={() => setFilter(showAttending)}>attending</button>
       <button onClick={() => setFilter(showNotAttending)}>not attending</button>
@@ -151,6 +167,9 @@ function App() {
         updateFirstName={updateFirstName}
         filter={filter}
       />
+      <button onClick={() => deleteAllGuests(guestList)}>
+        Delete Guest List
+      </button>
     </main>
   );
 }
