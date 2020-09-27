@@ -1,9 +1,10 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 // eslint-disable-next-line no-unused-vars
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { jsx, css } from '@emotion/core';
 import Emoji from './Emoji';
+import Guest from './Guest';
 
 const GuestListStyles = css`
   ul {
@@ -32,7 +33,14 @@ const GuestListStyles = css`
   }
 `;
 
-function GuestList({ guestList, toggleAttendance, deleteGuest, filter }) {
+function GuestList({
+  guestList,
+  toggleAttendance,
+  deleteGuest,
+  updateFirstName,
+  updateLastName,
+  filter,
+}) {
   let filteredGuestList = guestList;
 
   if (filter === 'showAttending') {
@@ -40,16 +48,6 @@ function GuestList({ guestList, toggleAttendance, deleteGuest, filter }) {
   } else if (filter === 'showNotAttending') {
     filteredGuestList = guestList.filter((guest) => guest.attending === false);
   }
-
-  const [isEditable, setIsEditable] = useState(false);
-  const changeIsEditable = () => {
-    setIsEditable(!isEditable);
-  };
-
-  const updateFirstName = () => {
-    changeIsEditable();
-    //// HOW TO ACTUALLY UPDATE THE NAME refs???
-  };
 
   return (
     <div css={GuestListStyles}>
@@ -72,22 +70,12 @@ function GuestList({ guestList, toggleAttendance, deleteGuest, filter }) {
                 {guest.attending ? 'Cancel' : 'Confirm'}
               </button>
 
-              <Emoji symbol="🎩 " />
-              {isEditable ? (
-                <span>
-                  <input type="text" defaultValue={guest.firstName} />
-                  <button onClick={changeIsEditable}>X</button>
-                  <button onClick={updateFirstName}>Save</button>
-                </span>
-              ) : (
-                <span onDoubleClick={changeIsEditable}>{guest.firstName} </span>
-              )}
+              <Guest
+                guest={guest}
+                updateFirstName={updateFirstName}
+                updateLastName={updateLastName}
+              />
 
-              <span>{guest.lastName} </span>
-              <span>{guest.attending ? 'attends the party. ' : null}</span>
-            </div>
-            <div>
-              {' '}
               {/* Confirmation due by:{' '}
               {guest.confirmationDueDate.toLocaleDateString()} */}
             </div>

@@ -62,8 +62,28 @@ function App() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ attending: newAttendance.toString() }),
+      body: JSON.stringify({ attending: newAttendance }),
     });
+  };
+  // function to patch new value for any key
+  const patchName = (id, newValue, keyToUpdate) => {
+    if (keyToUpdate === 'firstName') {
+      fetch(`${baseUrl}/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ firstName: newValue }),
+      });
+    } else if (keyToUpdate === 'lastName') {
+      fetch(`${baseUrl}/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ lastName: newValue }),
+      });
+    }
   };
 
   // call this function in use effect on rendering to fetch guest list from server
@@ -92,23 +112,9 @@ function App() {
   const deleteAllGuests = (guestList) => {
     for (let i = 0; i < guestList.length; i++) {
       deleteGuestFromServer(guestList[i].id);
-      console.log(guestList[i].id);
     }
     setGuestList([]);
   };
-  // two different methods to change one guest and update the guest list
-  // change attending status of one guest. filter guest list by id and get attenting status of that guest.
-  // patch inverse of that boolean to the server
-  // first not quite working
-  // const toggleAttendance2 = (id) => {
-  //   const guestById = guestList.filter((guest) => guest.id === id);
-  //   const newAttendance = !guestById[0].attending;
-  //   patchAttendance(id, newAttendance);
-  //   const updatedGuestList = guestList.map((guest) =>
-  //     guest.id !== id ? guest : { ...guest, attending: !guest.attending },
-  //   );
-  //   setGuestList(updatedGuestList);
-  // };
 
   const toggleAttendance = (id) => {
     //first filter out guest I want to modify, inialize index varible outside of filter
@@ -143,11 +149,21 @@ function App() {
     deleteGuestFromServer(id);
   };
 
-  const updateFirstName = (id) => {
+  const updateFirstName = (id, value) => {
     const updatedGuestList = guestList.map((guest) =>
-      guest.id !== id ? guest : { ...guest, firstName: 'something' },
+      guest.id !== id ? guest : { ...guest, firstName: value },
     );
     setGuestList(updatedGuestList);
+    patchName(id, value, 'firstName');
+    fetchGuestList();
+  };
+  const updateLastName = (id, value) => {
+    const updatedGuestList = guestList.map((guest) =>
+      guest.id !== id ? guest : { ...guest, lastName: value },
+    );
+    setGuestList(updatedGuestList);
+    patchName(id, value, 'lastName');
+    fetchGuestList();
   };
 
   return (
@@ -165,6 +181,7 @@ function App() {
         toggleAttendance={toggleAttendance}
         deleteGuest={deleteGuest}
         updateFirstName={updateFirstName}
+        updateLastName={updateLastName}
         filter={filter}
       />
       <button onClick={() => deleteAllGuests(guestList)}>
