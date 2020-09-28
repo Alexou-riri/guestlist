@@ -1,9 +1,8 @@
 /** @jsx jsx */
 /** @jsxFrag React.Fragment */
 // eslint-disable-next-line no-unused-vars
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import { jsx, css } from '@emotion/core';
-import Emoji from './Emoji';
 import Guest from './Guest';
 
 const GuestListStyles = css`
@@ -19,8 +18,6 @@ const GuestListStyles = css`
     width: 80px;
     display: inline-block;
     margin: 0 0.5em 0 0em;
-    justify-content: right;
-    align-self: right;
   }
   li {
     width: 100%;
@@ -40,9 +37,10 @@ function GuestList({
   updateFirstName,
   updateLastName,
   filter,
+  emoji,
 }) {
   let filteredGuestList = guestList;
-
+  // depending on state of the filter, set the array to map over for e render
   if (filter === 'showAttending') {
     filteredGuestList = guestList.filter((guest) => guest.attending === true);
   } else if (filter === 'showNotAttending') {
@@ -74,10 +72,8 @@ function GuestList({
                 guest={guest}
                 updateFirstName={updateFirstName}
                 updateLastName={updateLastName}
+                emoji={emoji}
               />
-
-              {/* Confirmation due by:{' '}
-              {guest.confirmationDueDate.toLocaleDateString()} */}
             </div>
           </li>
         ))}

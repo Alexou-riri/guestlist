@@ -21,23 +21,31 @@ const RegisterGuestFormStyles = css`
   }
 `;
 
-function RegisterGuestForm(props) {
+function GuestInviteForm(props) {
   const [newGuestFirstName, setNewGuestFirstName] = useState('');
   const [newGuestLastName, setNewGuestLastName] = useState('');
-  const [newGuestDueDate, setNewGuestDueDate] = useState(new Date());
+
+  // default deadline one week in the future
+  const inOneWeek = () => {
+    var date = new Date();
+    date.setDate(date.getDate() + 7);
+    return date;
+  };
+  const [newGuestDeadline, setNewGuestDeadline] = useState(inOneWeek());
 
   const handleChangedDate = (date) => {
-    setNewGuestDueDate(date);
+    setNewGuestDeadline(date);
   };
 
   return (
     <div css={RegisterGuestFormStyles}>
       <form
         onSubmit={(e) => {
-          props.addGuest(newGuestFirstName, newGuestLastName, newGuestDueDate);
+          props.addGuest(newGuestFirstName, newGuestLastName, newGuestDeadline);
           e.preventDefault();
           setNewGuestFirstName([]);
           setNewGuestLastName([]);
+          setNewGuestDeadline(inOneWeek());
         }}
       >
         <input
@@ -54,11 +62,11 @@ function RegisterGuestForm(props) {
           value={newGuestLastName}
           onChange={(e) => setNewGuestLastName(e.currentTarget.value)}
         ></input>
-        <Datepicker selected={newGuestDueDate} onChange={handleChangedDate} />
+        <Datepicker selected={newGuestDeadline} onChange={handleChangedDate} />
         <input type="submit" value="Invite Guest" />
       </form>
     </div>
   );
 }
 
-export default RegisterGuestForm;
+export default GuestInviteForm;

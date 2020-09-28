@@ -24,6 +24,11 @@ button {
   background-color: white;
 }
 
+div {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
 .inline-text_copy--active,
 .ainline-text_input--active {
   font: inherit;
@@ -47,4 +52,13 @@ button {
 .inline-text_input--active {
   border-bottom: 1px solid #666666;
   text-align: left;
+}
+
+.credit {
+  font-size: 8px;
+  text-decoration: none;
+  color: black;
+  background-color: white;
+  position: absolute;
+  bottom: 0px;
 }
