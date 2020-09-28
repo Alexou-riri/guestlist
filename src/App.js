@@ -194,9 +194,9 @@ function App() {
         <GuestInviteForm addGuest={addGuest} />
         <div>Add some decoration: </div>
         <select onChange={(e) => handleEmojiChange(e)}>
-          <option value={'🎩'}>🎩</option>
-          <option value={'👒'}>👒</option>
-          <option value={'🎉'}>🎉</option>
+          <option value={'🎩'}>{'🎩'}</option>
+          <option value={'👒'}>{'👒'}</option>
+          <option value={'🎉'}>{'🎉'}'</option>
         </select>
         <div>Filter:</div>
         <button onClick={() => setFilter(showAttending)}>attending</button>
