@@ -22,7 +22,7 @@ const MainStyles = css`
 `;
 
 function App() {
-  const baseUrl = 'https://express-rest-guest-list-api.herokuapp.com';
+  const baseUrl = 'https://react-guestlist-api.herokuapp.com';
   // setState initially to empty array, until use Effect fetches data from the server
   const [guestList, setGuestList] = useState([]);
   // define filters as variables to enable autocomplete to show attending and not attending guests, initially set to show all
