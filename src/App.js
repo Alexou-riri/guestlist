@@ -45,7 +45,7 @@ function App() {
 
   // function to fetch GuestList form the server and set guestList
   const fetchGuestList = async () => {
-    const response = await fetch('http://localhost:5000/');
+    const response = await fetch('https://react-guestlist-api.herokuapp.com');
     const data = await response.json();
     setGuestList(data);
   };
