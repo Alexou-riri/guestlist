@@ -103,9 +103,6 @@ function App() {
   useEffect(() => {
     fetchGuestList();
   }, []);
-  useEffect(() => {
-    fetchGuestList();
-  }, [guestList]);
 
   // class contructor for new guest
   class Guest {
