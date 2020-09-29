@@ -15,7 +15,6 @@ const MainStyles = css`
   padding: 2em;
   margin: 0 auto;
   background-color: rgba(255, 255, 255, 0.95);
-
   h1 {
     font-size: 42px;
   }
@@ -24,7 +23,7 @@ const MainStyles = css`
 function App() {
   const baseUrl = 'https://react-guestlist-api.herokuapp.com';
   // setState initially to empty array, until use Effect fetches data from the server
-  const [guestList, setGuestList] = useState(fetchGuestList());
+  const [guestList, setGuestList] = useState([]);
   // define filters as variables to enable autocomplete to show attending and not attending guests, initially set to show all
   const showAll = 'showAll';
   const showAttending = 'showAttending';
@@ -32,7 +31,7 @@ function App() {
   const [filter, setFilter] = useState(showAll);
   // initialize emoji to local storage, otherwise to empty string
   const [emoji, setEmoji] = useState(
-    localStorage.getItem('emojiInLocalStorage' || '🎩'),
+    localStorage.getItem('emojiInLocalStorage' || ''),
   );
 
   const handleEmojiChange = (e) => {
@@ -103,6 +102,9 @@ function App() {
   useEffect(() => {
     fetchGuestList();
   }, []);
+  useEffect(() => {
+    fetchGuestList();
+  }, [guestList]);
 
   // class contructor for new guest
   class Guest {
