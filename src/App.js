@@ -31,7 +31,7 @@ function App() {
   const [filter, setFilter] = useState(showAll);
   // initialize emoji to local storage, otherwise to empty string
   const [emoji, setEmoji] = useState(
-    localStorage.getItem('emojiInLocalStorage' || ''),
+    localStorage.getItem('emojiInLocalStorage' || ' '),
   );
 
   const handleEmojiChange = (e) => {
