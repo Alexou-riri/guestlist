@@ -22,6 +22,7 @@ const MainStyles = css`
 
 function App() {
   const baseUrl = 'https://react-guestlist-api.herokuapp.com';
+  //const baseUrl = 'http://localhost:5000';
   // setState initially to empty array, until use Effect fetches data from the server
   const [guestList, setGuestList] = useState([]);
   // define filters as variables to enable autocomplete to show attending and not attending guests, initially set to show all
@@ -29,10 +30,12 @@ function App() {
   const showAttending = 'showAttending';
   const showNotAttending = 'showNotAttending';
   const [filter, setFilter] = useState(showAll);
+
   // initialize emoji to local storage, otherwise to empty string
   const [emoji, setEmoji] = useState(
     localStorage.getItem('emojiInLocalStorage' || ' '),
   );
+  const [loading, setLoading] = useState(false);
 
   const handleEmojiChange = (e) => {
     setEmoji(e.currentTarget.value);
@@ -43,15 +46,22 @@ function App() {
   }, [emoji]);
 
   // function to fetch GuestList form the server and set guestList
-  const fetchGuestList = async () => {
-    const response = await fetch('https://react-guestlist-api.herokuapp.com');
+  async function fetchGuestList() {
+    const response = await fetch(`${baseUrl}/`);
     const data = await response.json();
     setGuestList(data);
-  };
+  }
+
+  useEffect(() => {
+    if (loading === false) {
+      fetchGuestList();
+    }
+  }, [loading]);
 
   // function to post new Guest to the server
-  const postGuest = (first, last, deadline) => {
-    fetch(`${baseUrl}/`, {
+  async function postGuest(first, last, deadline) {
+    setLoading(true);
+    await fetch(`${baseUrl}/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -60,66 +70,53 @@ function App() {
         deadline: deadline,
       }),
     });
-  };
+    setLoading(false);
+  }
 
   // function to delete one guest from the server
-  const deleteGuestFromServer = (id) => {
-    fetch(`${baseUrl}/${id}`, { method: 'DELETE' });
-  };
+  async function deleteGuestFromServer(id) {
+    setLoading(true);
+    await fetch(`${baseUrl}/${id}`, { method: 'DELETE' });
+    setLoading(false);
+  }
 
   // function to patch attendance for one guest
-  const patchAttendance = (id, newAttendance) => {
-    fetch(`${baseUrl}/${id}`, {
+  async function patchAttendance(id, newAttendance) {
+    setLoading(true);
+    await fetch(`${baseUrl}/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ attending: newAttendance }),
     });
-  };
+    setLoading(false);
+  }
   // function to patch new value for names
-  const patchName = (id, newValue, keyToUpdate) => {
+  async function patchName(id, newValue, keyToUpdate) {
+    setLoading(true);
     if (keyToUpdate === 'firstName') {
-      fetch(`${baseUrl}/${id}`, {
+      await fetch(`${baseUrl}/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ firstName: newValue }),
       });
+      setLoading(false);
     } else if (keyToUpdate === 'lastName') {
-      fetch(`${baseUrl}/${id}`, {
+      await fetch(`${baseUrl}/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ lastName: newValue }),
       });
-    }
-  };
-
-  // call this function in use effect on rendering to fetch guest list from server on first render and whenever guestList changes
-  useEffect(() => {
-    fetchGuestList();
-  }, []);
-  useEffect(() => {
-    fetchGuestList();
-  }, [guestList]);
-
-  // class contructor for new guest
-  class Guest {
-    constructor(firstName, lastName, deadline) {
-      this.firstName = firstName;
-      this.lastName = lastName;
-      this.deadline = deadline;
+      setLoading(false);
     }
   }
-  // add a new guest by creating a new guest object with the class guest, push it to the guestlist and update guest list state
+
   const addGuest = (first, last, deadline) => {
-    const newGuest = new Guest(first, last, deadline);
-    const guestListWithAddedGuest = guestList.slice();
-    guestListWithAddedGuest.push(newGuest);
-    setGuestList(guestListWithAddedGuest);
     postGuest(first, last, deadline);
   };
 
@@ -127,16 +124,11 @@ function App() {
     for (let i = 0; i < guestList.length; i++) {
       deleteGuestFromServer(guestList[i].id);
     }
-    setGuestList([]);
   };
 
   const toggleAttendance = (id) => {
-    //first filter out guest I want to modify, inialize index varible outside of filter
-    // if the filter condition is true, get the index of that element, return the filtered element
-    let index;
     const guestToModify = guestList.filter((guest, ind) => {
       if (guest.id === id) {
-        index = ind;
       }
       return guest.id === id;
     });
@@ -145,39 +137,19 @@ function App() {
       ...guestToModify[0],
       attending: !guestToModify[0].attending,
     };
-    // make a copy of the guest list with slice
-    const guestListWithModifiedGuest = guestList.slice();
-    //replace the element in the list with the modified element
-    guestListWithModifiedGuest[index] = modifiedGuest;
-    // set the guest List state to that new array
-    setGuestList(guestListWithModifiedGuest);
-    // patch with the id and modified attending status
+
     patchAttendance(id, modifiedGuest.attending);
   };
 
   const deleteGuest = (id) => {
-    const updatedGuestListGuestDeleted = guestList.filter(
-      (guest) => guest.id !== id,
-    );
-    setGuestList(updatedGuestListGuestDeleted);
     deleteGuestFromServer(id);
   };
 
   const updateFirstName = (id, value) => {
-    const updatedGuestList = guestList.map((guest) =>
-      guest.id !== id ? guest : { ...guest, firstName: value },
-    );
-    setGuestList(updatedGuestList);
     patchName(id, value, 'firstName');
-    fetchGuestList();
   };
   const updateLastName = (id, value) => {
-    const updatedGuestList = guestList.map((guest) =>
-      guest.id !== id ? guest : { ...guest, lastName: value },
-    );
-    setGuestList(updatedGuestList);
     patchName(id, value, 'lastName');
-    fetchGuestList();
   };
 
   return (

@@ -22,7 +22,5 @@
     "isolatedModules": true,
     "target": "es5"
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src", "drafts/App-server-and-local.js"]
 }

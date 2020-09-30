@@ -84,7 +84,7 @@ export default function Guest({
             {guest.lastName}
           </span>
           {guest.attending === false && (
-            <span>: Please confirm by: {guest?.deadline.split('T')[0]}</span>
+            <span> Please confirm by: {guest?.deadline.split('T')[0]}</span>
           )}
           {guest.attending === false &&
             new Date(guest.deadline) < new Date() && (
