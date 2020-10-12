@@ -30,9 +30,10 @@ function App() {
   const [filter, setFilter] = useState(showAll);
 
   // initialize emoji to local storage, otherwise to empty string
+  
   const [emoji, setEmoji] = useState(
-    localStorage.getItem('emojiInLocalStorage' || ' '),
-  );
+    localStorage.getItem('emojiInLocalStorage'))
+
   const [loading, setLoading] = useState(false);
 
   const handleEmojiChange = (e) => {
@@ -72,11 +73,17 @@ function App() {
   }
 
   // function to delete one guest from the server
-  async function deleteGuestFromServer(id) {
+  async function deleteGuest(id) {
     setLoading(true);
     await fetch(`${baseUrl}/${id}`, { method: 'DELETE' });
     setLoading(false);
   }
+// function to delete all guests from the server
+  const deleteAllGuests = (guestList) => {
+    for (let i = 0; i < guestList.length; i++) {
+      deleteGuest(guestList[i].id);
+    }
+  };
 
   // function to patch attendance for one guest
   async function patchAttendance(id, newAttendance) {
@@ -114,14 +121,8 @@ function App() {
     }
   }
 
-  const deleteAllGuests = (guestList) => {
-    for (let i = 0; i < guestList.length; i++) {
-      deleteGuestFromServer(guestList[i].id);
-    }
-  };
-
-  const toggleAttendance = (id) => {
-    const guestToModify = guestList.find((guest, ind) => {
+const toggleAttendance = (id) => {
+    const guestToModify = guestList.find((guest) => {
       if (guest.id === id) {
       }
       return guest.id === id;
@@ -133,10 +134,6 @@ function App() {
     };
 
     patchAttendance(id, modifiedGuest.attending);
-  };
-
-  const deleteGuest = (id) => {
-    deleteGuestFromServer(id);
   };
 
   const updateFirstName = (id, value) => {
