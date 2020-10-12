@@ -1,4 +1,4 @@
-REACT RSVP Guest List Application
+## REACT RSVP Guest List Application
 
 [Netlify](https://gallant-banach-d9e317.netlify.app)
 
