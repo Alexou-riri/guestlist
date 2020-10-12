@@ -19,10 +19,8 @@ const MainStyles = css`
     font-size: 42px;
   }
 `;
-
+const baseUrl = 'https://react-guestlist-api.herokuapp.com';
 function App() {
-  const baseUrl = 'https://react-guestlist-api.herokuapp.com';
-  //const baseUrl = 'http://localhost:5000';
   // setState initially to empty array, until use Effect fetches data from the server
   const [guestList, setGuestList] = useState([]);
   // define filters as variables to enable autocomplete to show attending and not attending guests, initially set to show all
@@ -116,10 +114,6 @@ function App() {
     }
   }
 
-  const addGuest = (first, last, deadline) => {
-    postGuest(first, last, deadline);
-  };
-
   const deleteAllGuests = (guestList) => {
     for (let i = 0; i < guestList.length; i++) {
       deleteGuestFromServer(guestList[i].id);
@@ -127,15 +121,15 @@ function App() {
   };
 
   const toggleAttendance = (id) => {
-    const guestToModify = guestList.filter((guest, ind) => {
+    const guestToModify = guestList.find((guest, ind) => {
       if (guest.id === id) {
       }
       return guest.id === id;
     });
     // change the value of the attending property in the  element the filter returned
     const modifiedGuest = {
-      ...guestToModify[0],
-      attending: !guestToModify[0].attending,
+      ...guestToModify,
+      attending: !guestToModify.attending,
     };
 
     patchAttendance(id, modifiedGuest.attending);
@@ -162,7 +156,7 @@ function App() {
           Attending Guests:{' '}
           {guestList.filter((guest) => guest.attending === true).length}
         </div>
-        <GuestInviteForm addGuest={addGuest} />
+        <GuestInviteForm postGuest={postGuest} />
         <div>Add some decoration: </div>
         <select onChange={(e) => handleEmojiChange(e)}>
           <option value={'🎩'}>{'🎩'}</option>

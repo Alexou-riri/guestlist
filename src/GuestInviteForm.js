@@ -41,27 +41,25 @@ function GuestInviteForm(props) {
     <div css={RegisterGuestFormStyles}>
       <form
         onSubmit={(e) => {
-          props.addGuest(newGuestFirstName, newGuestLastName, newGuestDeadline);
+          props.postGuest(newGuestFirstName, newGuestLastName, newGuestDeadline);
           e.preventDefault();
-          setNewGuestFirstName([]);
-          setNewGuestLastName([]);
+          setNewGuestFirstName('');
+          setNewGuestLastName('');
           setNewGuestDeadline(inOneWeek());
         }}
       >
         <input
           required
-          type="text"
           placeholder="Virginia"
           value={newGuestFirstName}
           onChange={(e) => setNewGuestFirstName(e.currentTarget.value)}
-        ></input>
+        />
         <input
           required
-          type="text"
           placeholder="Woolf"
           value={newGuestLastName}
           onChange={(e) => setNewGuestLastName(e.currentTarget.value)}
-        ></input>
+        />
         <Datepicker selected={newGuestDeadline} onChange={handleChangedDate} />
         <input type="submit" value="Invite Guest" />
       </form>

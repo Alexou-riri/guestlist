@@ -36,11 +36,11 @@ export default function Guest({
       {isEditable && (
         <span>
           <input
-            type="text"
+          defaultValue={guest.firstName}
             ref={inputFirstName}
             placeholder={guest.firstName}
           />
-          <input type="text" ref={inputLastName} placeholder={guest.lastName} />
+          <input defaultValue={guest.lastName}ref={inputLastName} placeholder={guest.lastName} />
           <button
             onClick={() => {
               changeIsEditable();
@@ -84,7 +84,7 @@ export default function Guest({
             {guest.lastName}
           </span>
           {guest.attending === false && (
-            <span> Please confirm by: {guest?.deadline.split('T')[0]}</span>
+            <span> Please confirm by: {guest.deadline.split('T')[0]}</span>
           )}
           {guest.attending === false &&
             new Date(guest.deadline) < new Date() && (
