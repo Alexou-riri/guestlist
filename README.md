@@ -1,5 +1,11 @@
 REACT RSVP Guest List Application
 
+[Netlify](https://gallant-banach-d9e317.netlify.app)
+
+[Github](https://github.com/thorinaboenke/guestlist)
+
+[CodeSandbox](https://codesandbox.io/s/react-guest-list-gyml2)
+
 ### Functionalities
 
 Adding a guest to the list:
@@ -21,8 +27,4 @@ Delete Guest List: Deletes entire list
 
 ![alt text](https://github.com/thorinaboenke/guestlist/blob/master/src/images/Guestlist-screenshot.png)
 
-[Netlify](https://gallant-banach-d9e317.netlify.app)
 
-[Github](https://github.com/thorinaboenke/guestlist)
-
-[CodeSandbox](https://codesandbox.io/s/react-guest-list-gyml2)
