@@ -30,9 +30,10 @@ function App() {
   const [filter, setFilter] = useState(showAll);
 
   // initialize emoji to local storage, otherwise to empty string
-  
+
   const [emoji, setEmoji] = useState(
-    localStorage.getItem('emojiInLocalStorage'))
+    localStorage.getItem('emojiInLocalStorage'),
+  );
 
   const [loading, setLoading] = useState(false);
 
@@ -78,7 +79,7 @@ function App() {
     await fetch(`${baseUrl}/${id}`, { method: 'DELETE' });
     setLoading(false);
   }
-// function to delete all guests from the server
+  // function to delete all guests from the server
   const deleteAllGuests = (guestList) => {
     for (let i = 0; i < guestList.length; i++) {
       deleteGuest(guestList[i].id);
@@ -121,7 +122,7 @@ function App() {
     }
   }
 
-const toggleAttendance = (id) => {
+  const toggleAttendance = (id) => {
     const guestToModify = guestList.find((guest) => {
       if (guest.id === id) {
       }

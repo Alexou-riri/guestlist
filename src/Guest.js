@@ -31,18 +31,20 @@ export default function Guest({
   const inputFirstName = useRef(guest.firstName);
   const inputLastName = useRef(guest.lastName);
 
-
-
   return (
     <span>
       {isEditable && (
         <span>
           <input
-          defaultValue={guest.firstName}
+            defaultValue={guest.firstName}
             ref={inputFirstName}
             placeholder={guest.firstName}
           />
-          <input defaultValue={guest.lastName}ref={inputLastName} placeholder={guest.lastName} />
+          <input
+            defaultValue={guest.lastName}
+            ref={inputLastName}
+            placeholder={guest.lastName}
+          />
           <button
             onClick={() => {
               changeIsEditable();
@@ -72,7 +74,9 @@ export default function Guest({
           >
             Edit
           </button>
-          { localStorage.getItem('emojiInLocalStorage')!== null &&<Emoji symbol={emoji} />}
+          {localStorage.getItem('emojiInLocalStorage') !== null && (
+            <Emoji symbol={emoji} />
+          )}
           <span
             className={`guest ${
               guest.attending ? 'attending' : 'notAttending'

@@ -41,7 +41,11 @@ function GuestInviteForm(props) {
     <div css={RegisterGuestFormStyles}>
       <form
         onSubmit={(e) => {
-          props.postGuest(newGuestFirstName, newGuestLastName, newGuestDeadline);
+          props.postGuest(
+            newGuestFirstName,
+            newGuestLastName,
+            newGuestDeadline,
+          );
           e.preventDefault();
           setNewGuestFirstName('');
           setNewGuestLastName('');
