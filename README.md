@@ -2,7 +2,7 @@ REACT RSVP Guest List Application
 
 [Netlify](https://gallant-banach-d9e317.netlify.app)
 
-[Github](https://github.com/thorinaboenke/guestlist)
+[GitHub](https://github.com/thorinaboenke/guestlist)
 
 [CodeSandbox](https://codesandbox.io/s/react-guest-list-gyml2)
 
