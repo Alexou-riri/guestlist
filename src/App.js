@@ -3,7 +3,6 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from 'react';
 import { jsx, css } from '@emotion/core';
-import './App.css';
 import GuestList from './GuestList';
 import GuestInviteForm from './GuestInviteForm';
 
@@ -42,7 +41,7 @@ function App() {
   };
   // when emoji state changes, update local storage
   useEffect(() => {
-    localStorage.setItem('emojiInLocalStorage', emoji);
+    localStorage.setItem('emojiInLocalStorage', emoji || '👒');
   }, [emoji]);
 
   // function to fetch GuestList form the server and set guestList

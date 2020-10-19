@@ -74,8 +74,10 @@ export default function Guest({
           >
             Edit
           </button>
-          {localStorage.getItem('emojiInLocalStorage') !== null && (
-            <Emoji symbol={emoji} />
+          {localStorage.getItem('emojiInLocalStorage') ? (
+            <Emoji symbol={emoji || '👒'} />
+          ) : (
+            <span />
           )}
           <span
             className={`guest ${
