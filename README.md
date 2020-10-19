@@ -1,5 +1,7 @@
 ## REACT RSVP Guest List Application
 
+Created during UpLeveled Web Development Bootcamp Vienna September 2020.
+
 [Netlify](https://gallant-banach-d9e317.netlify.app)
 
 [GitHub](https://github.com/thorinaboenke/guestlist)
